@@ -111,7 +111,7 @@ def build_lsh_from_file_and_given_interval(interval):
     time_for_interval.update({interval : end_lshtopk-start_lshtopk})
 
     write_to_disk(interval_lsh_jaccard_results, interval+"_lsh"+".pkl")
-    return interval_lsh_jaccard_results, time_for_interval
+    return interval_lsh_jaccard_results
 
 lsh()
 

@@ -15,6 +15,9 @@ def precision_for_query(brute_result, lsh):
                      ]
     """
     comparison_to_baseline = {}
+    arr_precision = [0] * 25
+    arr_recall = [0] * 25
+    i = 0
     for key, inner_jaccard_map in brute_result.items():
         brute_key_jaccard_docs = set(inner_jaccard_map)
         lsh_key_jaccard_docs = set((lsh.get(key)))
@@ -25,6 +28,9 @@ def precision_for_query(brute_result, lsh):
 
         precision = tp/(tp + fp)        
         recall = tp/(tp + fn)
+        arr_precision[i] = precision
+        arr_recall[i] = recall
+        i = i+1
         comparison_to_baseline.update({key: [precision,recall]})
     return comparison_to_baseline
 
