@@ -39,7 +39,7 @@ def run_bruteforce_on_interval(interval_name):
     time_for_interval.update({interval_name : end_bruteforce-start_bruteforce})
 
     write_to_disk(interval_jaccard_results, interval_name+"_brute"+".pkl")
-    return interval_jaccard_results
+    return interval_jaccard_results, time_for_interval
 
 interval_name = "0.interval"
 time_for_interval = {}

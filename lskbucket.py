@@ -1,5 +1,6 @@
 import math
 import timeit
+import heapq
 
 from helper import QUERY_DIR, read_all_from_disk, read_file_as_list, write_to_disk
 
@@ -7,6 +8,7 @@ from helper import QUERY_DIR, read_all_from_disk, read_file_as_list, write_to_di
 
 rows = 16
 band = 8
+k = 12
 """
 
 buckets b r 
@@ -25,8 +27,18 @@ def lsh_hash_function(value, band_to_go):
     return  (((value) * (band_to_go + 1)) + 1) % mod_value
 
 def compute_jaccard_by_signature(docj, candidate_pairs):
-    """
-    """
+    h = []
+    shingle_map = read_all_from_disk("docj_to_shingle_map.pkl")
+    docj_shingle = shingle_map.get(docj)
+    for file in candidate_pairs:
+        shingle = shingle_map.get(file)
+
+        intersection = len(docj_shingle.intersection(shingle))
+        union = len(docj_shingle.union(shingle))
+        jaccard = intersection/union
+
+        heapq.heappush(h, (jaccard, file))
+    return heapq.nlargest(k, h) 
 
 def lsh_on_single_signature(docj, signaturej, lsh_band, querying):
     """
@@ -57,8 +69,9 @@ def lsh_on_single_signature(docj, signaturej, lsh_band, querying):
                 lsh_band.get(band_to_go)[hashval] = {docj}
     if querying:
         # return compute_jaccard_by_signature(docj, candidate_pairs)
-        print(len(candidate_pairs) ,docj, ":" , (candidate_pairs))
-        print()
+        return compute_jaccard_by_signature(docj, candidate_pairs)
+        # print(len(candidate_pairs) ,docj, ":" , (candidate_pairs))
+        # print()
 
 def lsh():
     """
@@ -98,9 +111,9 @@ def build_lsh_from_file_and_given_interval(interval):
     time_for_interval.update({interval : end_lshtopk-start_lshtopk})
 
     write_to_disk(interval_lsh_jaccard_results, interval+"_lsh"+".pkl")
-    return interval_lsh_jaccard_results
+    return interval_lsh_jaccard_results, time_for_interval
 
-# lsh()
+lsh()
 
 
 # def find():

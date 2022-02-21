@@ -16,8 +16,8 @@ def precision_for_query(brute_result, lsh):
     """
     comparison_to_baseline = {}
     for key, inner_jaccard_map in brute_result.items():
-        brute_key_jaccard_docs = set(inner_jaccard_map.values())
-        lsh_key_jaccard_docs = set((lsh.get(key)).values())
+        brute_key_jaccard_docs = set(inner_jaccard_map)
+        lsh_key_jaccard_docs = set((lsh.get(key)))
 
         tp = len(lsh_key_jaccard_docs.intersection(brute_key_jaccard_docs))
         fp = len(lsh_key_jaccard_docs.difference(brute_key_jaccard_docs)) 
@@ -31,9 +31,10 @@ def precision_for_query(brute_result, lsh):
 
 def run_both_then_precision(interval):
     brute_result = run_bruteforce_on_interval(interval)
-    print(brute_result)
-    # lsh_result = build_lsh_from_file_and_given_interval(interval)
-    # comparison_res = precision_for_query(brute_result, lsh_result)
+    # print(brute_result)
+    lsh_result = build_lsh_from_file_and_given_interval(interval)
     # print(lsh_result)
+    comparison_res = precision_for_query(brute_result, lsh_result)
+    print(comparison_res)
 
-run_both_then_precision("2.interval")
+run_both_then_precision("1.interval")
