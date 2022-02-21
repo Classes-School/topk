@@ -1,10 +1,18 @@
 
-
+from bruteforce import time_for_interval_bruteforce
+from lskbucket import time_for_interval_lsh
+from matplotlib import pyplot as plt
+import numpy
 from bruteforce import run_bruteforce_on_interval
 from lskbucket import build_lsh_from_file_and_given_interval
 
+arr_precision = [0] * 25
+arr_recall = [0] * 25
 
-def precision_for_query(brute_result, lsh):
+precision_final = [0]* 100
+recall_final = [0]*100
+
+def precision_for_query(interval, brute_result, lsh):
     """
     2b3m-wnm2#3.txt [(1.0, '2b3m-wnm2#3.txt'), (0.05454545454545454, '3fcn-e5dk#23.txt'), 
                      (0.040268456375838924, '2mtu-ysnw#1.txt'), (0.04, '265m-q8pf#1.txt'), 
@@ -15,8 +23,6 @@ def precision_for_query(brute_result, lsh):
                      ]
     """
     comparison_to_baseline = {}
-    arr_precision = [0] * 25
-    arr_recall = [0] * 25
     i = 0
     for key, inner_jaccard_map in brute_result.items():
         brute_key_jaccard_docs = set(inner_jaccard_map)
@@ -29,7 +35,9 @@ def precision_for_query(brute_result, lsh):
         precision = tp/(tp + fp)        
         recall = tp/(tp + fn)
         arr_precision[i] = precision
+        precision_final.append(precision)
         arr_recall[i] = recall
+        recall_final.append(recall)
         i = i+1
         comparison_to_baseline.update({key: [precision,recall]})
     return comparison_to_baseline
@@ -37,10 +45,51 @@ def precision_for_query(brute_result, lsh):
 
 def run_both_then_precision(interval):
     brute_result = run_bruteforce_on_interval(interval)
-    # print(brute_result)
     lsh_result = build_lsh_from_file_and_given_interval(interval)
-    # print(lsh_result)
-    comparison_res = precision_for_query(brute_result, lsh_result)
+    comparison_res = precision_for_query(interval, brute_result, lsh_result)
+    # interval_comparison.update(in)
     print(comparison_res)
 
-run_both_then_precision("1.interval")
+def plot1(recall_final, precision_final):
+    plt.plot(recall_final,precision_final, 'o', color='black' )
+    #add axis labels to plot
+    plt.title('Precision-Recall Curve')
+    plt.ylabel('Precision')
+    plt.xlabel('Recall')
+    #display plot
+    plt.show()
+
+def plot():
+    run_both_then_precision("0.interval")
+    run_both_then_precision("1.interval")
+    run_both_then_precision("2.interval")
+    run_both_then_precision("3.interval")
+
+    t_bruteforce = time_for_interval_bruteforce
+    t_lsh = time_for_interval_lsh
+    # extract(t_bruteforce, t_lsh)
+    b_arr = [0]*4
+    l_arr = [0]*4
+    i = 0
+    for key, time_b in t_bruteforce.items():
+        time_l = t_lsh.get(key)
+        b_arr[i] = time_b
+        l_arr[i] = time_l
+        i = i+1
+
+    interval = [0,1,2,3]
+    plt.plot(interval, b_arr, label = "BruteForce")
+    plt.plot(interval, l_arr, label = "LSH")
+    plt.title('Time LSH vs. Time Brute Force Curve')
+    plt.ylabel('time')
+    plt.xlabel('intervals')
+    #display plot
+    plt.legend()
+    plt.show()
+
+# {int: time,  int:time}
+# plot(t_bruteforce.get("0.interval"), t_lsh.get("0.interval"))
+
+
+plot1(recall_final, precision_final)
+plot()

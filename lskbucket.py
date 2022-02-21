@@ -9,6 +9,8 @@ from helper import QUERY_DIR, read_all_from_disk, read_file_as_list, write_to_di
 rows = 16
 band = 8
 k = 12
+time_for_interval_lsh = {}
+
 """
 
 buckets b r 
@@ -99,7 +101,6 @@ def build_lsh_from_file_and_given_interval(interval):
 
     all_queries = read_file_as_list(interval, QUERY_DIR)
     interval_lsh_jaccard_results = {}
-    time_for_interval = {}
 
     start_lshtopk = timeit.timeit()
     for docj in all_queries:
@@ -108,7 +109,7 @@ def build_lsh_from_file_and_given_interval(interval):
         """
         interval_lsh_jaccard_results.update( {docj : lsh_on_single_signature(docj, all_sig.get(docj), querying_lsh_bands, True) })
     end_lshtopk = timeit.timeit()
-    time_for_interval.update({interval : end_lshtopk-start_lshtopk})
+    time_for_interval_lsh.update({interval : end_lshtopk-start_lshtopk})
 
     write_to_disk(interval_lsh_jaccard_results, interval+"_lsh"+".pkl")
     return interval_lsh_jaccard_results
