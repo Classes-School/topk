@@ -1,5 +1,13 @@
 from os import listdir
 from os.path import isfile, join
+from helper import write_to_disk
+
+"""
+changes: moved write to disk and read to helper
+    changed each document's shingles to set from list
+    
+"""
+
 
 """
 input: Document
@@ -20,8 +28,8 @@ def get_shingles(doc_txt, dir):
     with open(dir+"/"+doc_txt) as doc:
         for line in doc:
             shingles.add(line.strip())
-    shingles_list = list(shingles)
-    map_each_doc_and_shingle.update({doc_txt: shingles_list})
+    # shingles_list = list(shingles) # changed to set
+    map_each_doc_and_shingle.update({doc_txt: shingles})
  
     global all_shingles_sorted 
     all_shingles_sorted =  all_shingles_sorted.union(shingles)
@@ -35,7 +43,9 @@ def on_to_minhash():
     all_shingles_listed = list(all_shingles_sorted)
     all_shingles_listed.sort()
 
+    write_to_disk(map_each_doc_and_shingle, "docj_to_shingle_map.pkl")
     map_for_minhash = {'each': map_each_doc_and_shingle, 'all': all_shingles_listed}
+
     return map_for_minhash
 
 
@@ -47,4 +57,4 @@ def k_shingling(datasets_dir = "200h_A1_datasets/datasets"):
          if isfile(join(datasets_dir, f)):
              get_shingles(f, datasets_dir)
     return on_to_minhash()
-
+k_shingling()
