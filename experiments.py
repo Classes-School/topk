@@ -30,8 +30,9 @@ def precision_for_query(brute_result, lsh):
 
 
 def run_both_then_precision(interval):
-    # brute_result = run_bruteforce_on_interval(interval)
-    lsh_result = build_lsh_from_file_and_given_interval(interval)
+    brute_result = run_bruteforce_on_interval(interval)
+    print(brute_result)
+    # lsh_result = build_lsh_from_file_and_given_interval(interval)
     # comparison_res = precision_for_query(brute_result, lsh_result)
     # print(lsh_result)
 

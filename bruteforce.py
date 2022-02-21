@@ -4,7 +4,7 @@ import timeit
 from helper import QUERY_DIR, read_all_from_disk, read_file_as_list, write_to_disk
 
 k = 12
-# each = read_all_from_disk("docj_to_shingle_map.pkl")
+each = read_all_from_disk("docj_to_shingle_map.pkl")
 
 def bruteforce_query(docj, each):
     h = []
@@ -30,10 +30,11 @@ def run_bruteforce_on_interval(interval_name):
         a key,value pair of interval_jaccard_results will look like: {query : [(jaccard, doc), ...(kth_jaccard, kth_doc)]}
     """
     interval_jaccard_results = {} 
+    # each =  read_all_from_disk("sig.pkl")
     all_queries = read_file_as_list(interval_name, QUERY_DIR)
     start_bruteforce = timeit.timeit()
     for query in all_queries:
-        interval_jaccard_results.update({query : bruteforce_query(query) })
+        interval_jaccard_results.update({query : bruteforce_query(query,each) })
     end_bruteforce = timeit.timeit()
     time_for_interval.update({interval_name : end_bruteforce-start_bruteforce})
 
