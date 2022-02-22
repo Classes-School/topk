@@ -36,9 +36,12 @@ def precision_for_query(interval, brute_result, lsh):
         precision = tp/(tp + fp)        
         recall = tp/(tp + fn)
         arr_precision[i] = precision
+        precision_final.append(precision)
 
         arr_recall[i] = recall
+        recall_final.append(recall)
         i = i+1
+
     print(arr_precision)
     print(arr_recall)
     return comparison_to_baseline
@@ -63,7 +66,7 @@ b_arr = [0]*4
 l_arr = [0]*4
 
 def plot():
-    avg = 20
+    avg = 10
     t_bruteforce = {}
     t_lsh = {}
     for i in range(avg):
@@ -98,13 +101,16 @@ def plot():
     interval = [0,1,2,3]
     plt.plot(interval, b_arr, label = "BruteForce")
     plt.plot(interval, l_arr, label = "LSH")
-    plt.title('20 Time Average LSH vs. Time Brute Force Curve')
+    plt.title('10 Time Average LSH vs. Time Brute Force Curve')
     plt.ylabel('time')
     plt.xlabel('intervals')
     #display plot
     plt.legend()
     plt.show()
 
-# plot()
 run_both_then_precision("0.interval")
-plot_recall_prec(arr_recall, arr_precision)
+run_both_then_precision("1.interval")
+run_both_then_precision("2.interval")
+run_both_then_precision("3.interval")
+plot_recall_prec(recall_final, precision_final)
+plot()
