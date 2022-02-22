@@ -116,16 +116,3 @@ def build_lsh_from_file_and_given_interval(interval):
 
 lsh()
 
-
-# def find():
-#     """
-#     """
-#     i = 0
-#     bands = read_all_from_disk("lsh_bands_result.pkl")
-#     for key, value in bands.items():
-#         for k,v in value.items():
-#             if len(v) == 2000:
-#                 i = i + 1
-#                 print(key, k)
-#     print(i)
-# find()

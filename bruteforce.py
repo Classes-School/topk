@@ -40,10 +40,5 @@ def run_bruteforce_on_interval(interval_name):
     write_to_disk(interval_jaccard_results, interval_name+"_brute"+".pkl")
     return interval_jaccard_results
 
-interval_name = "0.interval"
 
-# run_bruteforce_on_interval(interval_name)
-# for i, j in query_interval.items():
-#     print(i, j)
-#     print()
-print(time_for_interval_bruteforce.get(interval_name))
+
